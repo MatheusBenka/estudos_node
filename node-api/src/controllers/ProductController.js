@@ -2,7 +2,8 @@ const service = require('../Services/ProductService')
 
 module.exports={
     async index(req,res){        
-        return res.json(await service.list());
+        const {page = 1} = req.query;        
+        return res.json(await service.list(page));
     },
     async store(req, res){        
         const storedP = await service.add(req.body);    

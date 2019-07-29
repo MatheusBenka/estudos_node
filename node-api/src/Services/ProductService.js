@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Product = mongoose.model("Product");
 
 module.exports={
-    async list(){
-       return await Product.find();       
+    async list(page){
+       return await Product.paginate({}, { page:page , limit : 10 });       
     },
     async add(newProduct){                        
         return await Product.create(newProduct);
@@ -15,6 +15,6 @@ module.exports={
         return await Product.findByIdAndUpdate(idUProduct,uProduct, {new : true});
     },
     async delete(id){
-        await Product.findOneAndRemove(id);
+        await Product.findOneAndRemove(id); 
     }
 };

@@ -1,34 +1,35 @@
-const express = require('express')
+const express = require('express');
+const mongoose = require('mongoose');
+const requireDir = require('require-dir');
+const cors = require('cors');
+
+// #region DB
+// db connect
+mongoose.connect(
+    'mongodb://localhost:27017/nodeapi', 
+    {useNewUrlParser:true}
+);
+requireDir('./src/models');
+// #endregion
+
+// #region config_app
 const app = express();
 
-app.listen(3001);
+// add json util (receber json body)
+app.use(express.json());
+app.use(cors());
+app.use('/api',require('./src/routes')); // register routes
 
-app.use(function (req, res, next) {
+app.use(function (req, res, next) {    
     res.header('Content-Type', 'application/json');
-    next();
-});
-
-app.get('/',(req,res)=>{    
-    res.send('Hello joao');
-});
-
-var usuarios = [
-    {
-        'nome':'joao',
-        'idade':18,
-        'email':'mail@mail.com'
-    },
-    {
-        'nome':'maria',
-        'idade':21,
-        'email':'mail2@mail.com'
+    try{
+        next();
+    }catch(err){
+        res.send('Internal server error');
     }
-]
-
-app.get('/usuarios',(req,res)=>{
-    res.json(usuarios)
+    
 });
 
-app.get('/usuario',(req, res)=>{
-    res.json(usuarios[0])
-});
+app.listen(3001);
+// #endregion
+
